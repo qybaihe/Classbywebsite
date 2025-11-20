@@ -1,393 +1,399 @@
 "use client";
 
-import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
-import Image from "next/image";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useMotionTemplate,
+  useMotionValue,
+} from "framer-motion";
 import {
   Mic,
   Sparkles,
   FileText,
   Cloud,
-  Shield,
   Zap,
   ChevronRight,
-  Mail,
   Github,
   ArrowUpRight,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react";
 
 export default function Home() {
+  const { scrollY } = useScroll();
+  // 视差效果：Hero 区域随着滚动稍微向下移动并变淡
+  const heroOpacity = useTransform(scrollY, [0, 600], [1, 0]);
+  const heroScale = useTransform(scrollY, [0, 600], [1, 0.95]);
+
   return (
-    <main className="min-h-screen bg-black text-white relative overflow-x-hidden selection:bg-indigo-500/30">
-      {/* 背景噪点与光斑 */}
-      <div className="bg-noise" />
-      <div className="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-purple-800/20 rounded-full blur-[120px] animate-blob" />
-        <div className="absolute top-[20%] right-[-10%] w-[400px] h-[400px] bg-blue-800/20 rounded-full blur-[100px] animate-blob" />
-        <div className="absolute bottom-[-10%] left-[20%] w-[600px] h-[600px] bg-indigo-800/10 rounded-full blur-[120px] animate-blob" />
+    <main className="min-h-screen bg-[#030303] text-white relative overflow-x-hidden selection:bg-indigo-500/30 scroll-smooth">
+      {/* 顶部环境光 - 更加柔和深邃 */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-20%] left-[20%] w-[60vw] h-[60vw] bg-indigo-500/10 rounded-full blur-[150px] animate-pulse" />
+        <div className="absolute top-[-10%] right-[10%] w-[40vw] h-[40vw] bg-purple-500/10 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-full h-full bg-[url('/grid.svg')] opacity-[0.03] invert" />
       </div>
 
-      {/* Navigation */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-black/50 backdrop-blur-xl border-b border-white/5">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="flex items-center space-x-3"
+      {/* Navigation - 顶部渐变条，融入背景 */}
+      <nav className="fixed top-0 left-0 right-0 z-50 bg-gradient-to-b from-black/70 via-black/40 to-transparent backdrop-blur-xl">
+        <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-3">
+            <Image
+              src="/logo.png"
+              alt="Classby logo"
+              width={28}
+              height={28}
+              className="rounded-lg"
+            />
+            <span className="text-xl font-bold tracking-tight">Classby</span>
+          </Link>
+
+          <div className="hidden md:flex items-center gap-6 text-sm font-medium text-zinc-400">
+            <Link href="#features" className="hover:text-white transition-colors">
+              功能
+            </Link>
+            <Link href="#how-it-works" className="hover:text-white transition-colors">
+              流程
+            </Link>
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              隐私
+            </Link>
+            <a
+              href="https://apps.apple.com"
+              target="_blank"
+              rel="noreferrer"
+              className="text-xs font-semibold bg-white text-black px-4 py-1.5 rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-1"
             >
-              <div className="relative">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg blur opacity-40" />
-                <Image
-                  src="/logo.png"
-                  alt="Classby logo"
-                  width={36}
-                  height={36}
-                  className="relative rounded-lg"
-                  priority
-                />
-              </div>
-              <span className="text-xl font-bold tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
-                CLASSBY
-              </span>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              className="hidden md:flex items-center space-x-1"
-            >
-              <NavLink href="#features">功能</NavLink>
-              <NavLink href="#privacy">隐私</NavLink>
-              <NavLink href="#support">支持</NavLink>
-              <div className="ml-4">
-                <a
-                  href="https://apps.apple.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group relative inline-flex h-9 items-center justify-center overflow-hidden rounded-full bg-white px-6 font-medium text-black transition-all duration-300 hover:bg-zinc-200 hover:w-32"
-                >
-                  <span className="mr-2">下载 App</span>
-                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  <div className="absolute inset-0 -z-10 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 opacity-0 transition-opacity duration-500 group-hover:opacity-10" />
-                </a>
-              </div>
-            </motion.div>
+              下载 App <ChevronRight className="w-3 h-3" />
+            </a>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 px-6">
-        <div className="container mx-auto relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="text-center max-w-4xl mx-auto flex flex-col items-center gap-8"
+      <motion.section
+        style={{ opacity: heroOpacity, scale: heroScale }}
+        className="relative pt-48 pb-32 px-6 z-10 flex flex-col items-center text-center"
+      >
+        {/* Announcement Pill */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-8"
+        >
+          <a
+            href="#"
+            className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-indigo-500/30 bg-indigo-500/10 text-indigo-300 text-xs font-medium hover:bg-indigo-500/20 transition-colors"
           >
-            {/* Badge */}
-            <div className="inline-flex items-center rounded-full border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-sm text-zinc-400 backdrop-blur-md">
-              <span className="flex h-2 w-2 rounded-full bg-green-500 mr-2 animate-pulse" />
-              Next-Gen Note Taking
-            </div>
+            <span className="relative flex h-2 w-2">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-500" />
+            </span>
+            全新 2.0 版本现已发布
+            <ChevronRight className="w-3 h-3" />
+          </a>
+        </motion.div>
 
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight text-white relative z-10">
-              让课堂记忆
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500 pb-2">
-                永久保鲜
-              </span>
-            </h1>
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.1 }}
+          className="text-6xl md:text-8xl font-bold tracking-tight text-white mb-6 max-w-5xl mx-auto leading-[1.1]"
+        >
+          听见，
+          <span className="text-transparent bg-clip-text bg-gradient-to-b from-white to-white/40">
+            然后记住一切。
+          </span>
+        </motion.h1>
 
-            <p className="text-lg md:text-xl text-zinc-400 leading-relaxed max-w-2xl mx-auto">
-              Classby 利用先进的 AI 技术，将稍纵即逝的课堂语音转化为结构清晰的智能笔记。
-              <br className="hidden md:block" />
-              专注聆听，剩下的交给我们。
-            </p>
+        <motion.p
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+          className="text-lg md:text-xl text-zinc-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+        >
+          Classby 利用设备端 AI，将稍纵即逝的课堂语音转化为
+          <br className="hidden md:block" />
+          结构清晰的智能笔记。不只是录音，更是你的第二大脑。
+        </motion.p>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4">
-              <a
-                href="https://apps.apple.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] focus:outline-none focus:ring-2 focus:ring-slate-400 focus:ring-offset-2 focus:ring-offset-slate-50"
-              >
-                <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-                <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-8 py-1 text-sm font-medium text-white backdrop-blur-3xl transition-colors hover:bg-slate-950/80">
-                  App Store 下载
-                  <ArrowUpRight className="ml-2 h-4 w-4" />
-                </span>
-              </a>
-              <a
-                href="#features"
-                className="text-sm font-semibold leading-6 text-zinc-300 hover:text-white transition-colors px-6 py-3"
-              >
-                了解更多 <span aria-hidden="true">→</span>
-              </a>
-            </div>
-          </motion.div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex flex-col sm:flex-row items-center gap-4"
+        >
+          <button className="group relative h-12 px-8 rounded-full bg-white text-black font-semibold text-sm overflow-hidden transition-all hover:scale-105">
+            <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 opacity-0 group-hover:opacity-20 transition-opacity w-[200%]" />
+            <span className="relative flex items-center gap-2">
+              App Store 下载 <ArrowUpRight className="w-4 h-4" />
+            </span>
+          </button>
+        </motion.div>
 
-          {/* 3D/Glass Mockup */}
-          <motion.div
-            initial={{ opacity: 0, rotateX: 20, y: 100 }}
-            animate={{ opacity: 1, rotateX: 0, y: 0 }}
-            transition={{ duration: 1, delay: 0.2, type: "spring" }}
-            className="mt-24 relative"
-          >
-            <div className="relative mx-auto max-w-4xl">
-              <div className="relative rounded-[2rem] bg-zinc-900/30 border border-white/10 p-2 backdrop-blur-xl shadow-2xl shadow-indigo-500/20">
-                <div className="rounded-[1.5rem] overflow-hidden bg-black border border-zinc-800 relative aspect-[16/9] md:aspect-[21/9]">
-                  {/* Abstract UI Representation */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 to-black p-8 flex flex-col md:flex-row gap-8">
-                    {/* Sidebar */}
-                    <div className="hidden md:flex flex-col gap-4 w-1/4 border-r border-zinc-800 pr-6">
-                      <div className="h-8 w-8 rounded-full bg-zinc-800 mb-4" />
-                      {[1, 2, 3, 4].map((i) => (
-                        <div
-                          key={i}
-                          className="h-10 w-full rounded-lg bg-zinc-800/50 animate-pulse"
-                          style={{ animationDelay: `${i * 0.1}s` }}
-                        />
-                      ))}
+        {/* High Fidelity Mockup */}
+        <motion.div
+          initial={{ opacity: 0, y: 100, rotateX: 15 }}
+          animate={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ duration: 1, delay: 0.4, type: "spring", bounce: 0.2 }}
+          className="mt-20 relative w-full max-w-5xl perspective-1000"
+        >
+          {/* 顶部光效 */}
+          <div className="absolute -top-20 left-1/2 -translate-x-1/2 w-3/4 h-40 bg-indigo-500/20 blur-[100px] rounded-full" />
+
+          {/* 模拟界面容器 */}
+          <div className="relative bg-[#0A0A0A] border border-white/10 rounded-2xl shadow-2xl overflow-hidden aspect-[16/10] md:aspect-[2/1] group">
+            {/* 边框流光 - 仅在 hover 时或一直微弱显示 */}
+            <div className="absolute inset-0 bg-gradient-to-tr from-white/5 via-transparent to-transparent opacity-50 pointer-events-none" />
+
+            {/* 模拟 UI 内容 */}
+            <div className="absolute inset-0 flex">
+              {/* Sidebar */}
+              <div className="w-64 border-r border-white/5 bg-zinc-900/30 hidden md:flex flex-col p-4 gap-2">
+                <div className="flex gap-2 mb-6">
+                  <div className="w-3 h-3 rounded-full bg-red-500/20 border border-red-500/50" />
+                  <div className="w-3 h-3 rounded-full bg-yellow-500/20 border border-yellow-500/50" />
+                  <div className="w-3 h-3 rounded-full bg-green-500/20 border border-green-500/50" />
+                </div>
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div
+                    key={i}
+                    className={`h-10 w-full rounded-lg flex items-center px-3 gap-3 ${
+                      i === 1 ? "bg-white/5 border border-white/5" : "opacity-50"
+                    }`}
+                  >
+                    <div className="w-4 h-4 rounded bg-white/20" />
+                    <div className="h-2 w-20 bg-white/10 rounded-full" />
+                  </div>
+                ))}
+              </div>
+
+              {/* Main Content */}
+              <div className="flex-1 p-6 md:p-10 relative overflow-hidden">
+                {/* Header */}
+                <div className="flex justify-between items-center mb-8">
+                  <div>
+                    <div className="h-8 w-64 bg-gradient-to-r from-white/20 to-transparent rounded-lg mb-3" />
+                    <div className="h-4 w-32 bg-white/5 rounded-lg" />
+                  </div>
+                  <div className="px-3 py-1 rounded-full border border-green-500/20 bg-green-500/10 text-green-400 text-xs flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+                    Processing
+                  </div>
+                </div>
+
+                {/* Note Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Sparkles className="w-4 h-4 text-purple-400" />
+                      <span className="text-sm font-medium text-zinc-300">AI 摘要</span>
                     </div>
-                    {/* Main Content */}
-                    <div className="flex-1 flex flex-col gap-6">
-                      <div className="flex items-center justify-between border-b border-zinc-800 pb-6">
-                        <div>
-                          <div className="h-8 w-64 bg-zinc-800 rounded-lg mb-2" />
-                          <div className="h-4 w-32 bg-zinc-900 rounded-lg" />
-                        </div>
-                        <div className="px-4 py-2 rounded-full bg-green-500/10 text-green-500 text-sm border border-green-500/20 flex items-center gap-2">
-                          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                          AI Processing
-                        </div>
-                      </div>
-                      <div className="space-y-4">
-                        <div className="h-4 w-full bg-zinc-800/30 rounded" />
-                        <div className="h-4 w-[90%] bg-zinc-800/30 rounded" />
-                        <div className="h-4 w-[95%] bg-zinc-800/30 rounded" />
-                        <div className="grid grid-cols-2 gap-4 mt-4">
-                          <div className="h-32 rounded-xl bg-zinc-800/20 border border-zinc-800/50 p-4">
-                            <Sparkles className="w-6 h-6 text-purple-500 mb-2" />
-                            <div className="h-3 w-20 bg-zinc-700/50 rounded mb-2" />
-                            <div className="h-2 w-full bg-zinc-800 rounded" />
-                          </div>
-                          <div className="h-32 rounded-xl bg-zinc-800/20 border border-zinc-800/50 p-4">
-                            <FileText className="w-6 h-6 text-blue-500 mb-2" />
-                            <div className="h-3 w-20 bg-zinc-700/50 rounded mb-2" />
-                            <div className="h-2 w-full bg-zinc-800 rounded" />
-                          </div>
-                        </div>
-                      </div>
+                    <div className="space-y-2">
+                      <div className="h-2 w-full bg-zinc-800 rounded-full" />
+                      <div className="h-2 w-[90%] bg-zinc-800 rounded-full" />
+                      <div className="h-2 w-[95%] bg-zinc-800 rounded-full" />
                     </div>
                   </div>
+                  <div className="p-5 rounded-xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-colors">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Zap className="w-4 h-4 text-yellow-400" />
+                      <span className="text-sm font-medium text-zinc-300">重点标记</span>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="h-2 w-full bg-zinc-800 rounded-full" />
+                      <div className="h-2 w-[80%] bg-zinc-800 rounded-full" />
+                    </div>
+                  </div>
+                </div>
 
-                  {/* Glow effects over UI */}
-                  <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-blue-500/10 blur-[80px] pointer-events-none" />
-                  <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-purple-500/10 blur-[80px] pointer-events-none" />
+                {/* Audio Waveform Simulation */}
+                <div className="mt-8 flex items-center gap-1 h-12 opacity-50 mask-linear-gradient">
+                  {Array.from({ length: 60 }).map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="w-1 bg-indigo-500 rounded-full"
+                      initial={{ height: 10 }}
+                      animate={{ height: [10, Math.random() * 40 + 10, 10] }}
+                      transition={{ duration: 1, repeat: Infinity, delay: i * 0.05 }}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
-          </motion.div>
-        </div>
-      </section>
+          </div>
+        </motion.div>
+      </motion.section>
 
-      {/* Features Section (Bento Grid) */}
-      <section id="features" className="py-32 px-6 relative">
+      {/* Features Section - Bento Grid Style */}
+      <section id="features" className="py-32 px-6 relative z-10">
         <div className="container mx-auto max-w-6xl">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="text-center mb-20"
-          >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              不仅仅是录音，
+          <div className="text-center max-w-3xl mx-auto mb-20">
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 tracking-tight">
+              不仅是录音工具，
               <br />
-              是您的
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                第二大脑
-              </span>
+              更是你的<span className="text-indigo-400">私人助教</span>。
             </h2>
-          </motion.div>
+            <p className="text-zinc-400 text-lg">我们重新设计了课堂笔记的每一个环节，让效率提升十倍。</p>
+          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Feature 1: Large */}
-            <SpotlightCard
-              className="md:col-span-2 row-span-2"
-              from="from-blue-500/20"
-              to="to-purple-500/20"
-            >
-              <div className="h-full flex flex-col justify-between relative z-10">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/10 flex items-center justify-center mb-4 border border-blue-500/20">
-                  <Mic className="w-6 h-6 text-blue-400" />
-                </div>
+          <div className="grid grid-cols-1 md:grid-cols-6 md:grid-rows-2 gap-4 md:gap-6 h-auto md:h-[800px]">
+            {/* Feature 1: Main Large */}
+            <BentoCard className="md:col-span-4 md:row-span-2 bg-gradient-to-br from-zinc-900 to-black relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay" />
+              <div className="relative z-10 h-full flex flex-col justify-between p-8 md:p-10">
                 <div>
-                  <h3 className="text-2xl font-bold mb-2 text-white">全天候后台录音</h3>
-                  <p className="text-zinc-400">
-                    即使锁屏或切换应用，录音依然稳定运行。不错过老师讲的任何重点，安心做笔记。
+                  <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center mb-4 border border-indigo-500/30 text-indigo-400">
+                    <Mic />
+                  </div>
+                  <h3 className="text-2xl font-bold mb-2">全天候后台录音</h3>
+                  <p className="text-zinc-400 max-w-md">
+                    即使锁屏或切换应用，录音依然稳定运行。独特的低功耗技术，让你的电量足以支撑一整天的课程。
                   </p>
                 </div>
-                <div className="absolute right-0 bottom-0 w-1/2 h-1/2 bg-gradient-to-br from-blue-500/10 to-transparent blur-3xl -z-10" />
-              </div>
-            </SpotlightCard>
-
-            {/* Feature 2 */}
-            <SpotlightCard>
-              <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center mb-4 border border-purple-500/20">
-                <Sparkles className="w-6 h-6 text-purple-400" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-white">AI 智能提炼</h3>
-              <p className="text-zinc-400 text-sm">自动提取课程概要、待办作业和关键知识点。</p>
-            </SpotlightCard>
-
-            {/* Feature 3 */}
-            <SpotlightCard>
-              <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center mb-4 border border-pink-500/20">
-                <FileText className="w-6 h-6 text-pink-400" />
-              </div>
-              <h3 className="text-xl font-bold mb-2 text-white">全文转写</h3>
-              <p className="text-zinc-400 text-sm">高精度语音转文字，支持全文搜索回溯。</p>
-            </SpotlightCard>
-
-            {/* Feature 4: Wide */}
-            <SpotlightCard className="md:col-span-3 flex items-center gap-8">
-              <div className="flex-1">
-                <div className="w-12 h-12 rounded-xl bg-green-500/10 flex items-center justify-center mb-4 border border-green-500/20">
-                  <Cloud className="w-6 h-6 text-green-400" />
+                {/* Visualization */}
+                <div className="w-full h-48 rounded-xl border border-white/5 bg-white/5 backdrop-blur-sm mt-8 flex items-center justify-center relative overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-t from-indigo-500/10 to-transparent" />
+                  {/* Fake Dynamic Island or Phone Status Bar */}
+                  <div className="absolute top-4 bg-black/50 px-4 py-1 rounded-full border border-white/10 flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
+                    <span className="text-[10px] text-zinc-300">Recording 01:23:45</span>
+                  </div>
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-white">iCloud 私有同步</h3>
-                <p className="text-zinc-400">
-                  基于 CloudKit 构建，您的数据仅在您的设备间传输，绝不存储于第三方服务器。
+              </div>
+            </BentoCard>
+
+            {/* Feature 2: AI */}
+            <BentoCard className="md:col-span-2 md:row-span-1 bg-zinc-900">
+              <div className="p-8">
+                <div className="w-10 h-10 rounded-lg bg-purple-500/20 flex items-center justify-center mb-4 border border-purple-500/30 text-purple-400">
+                  <Sparkles />
+                </div>
+                <h3 className="text-xl font-bold mb-2">AI 智能提炼</h3>
+                <p className="text-zinc-400 text-sm">自动提取课程概要、待办作业和关键知识点。</p>
+              </div>
+            </BentoCard>
+
+            {/* Feature 3: Sync */}
+            <BentoCard className="md:col-span-2 md:row-span-1 bg-zinc-900 group">
+              <div className="p-8 relative h-full">
+                <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center mb-4 border border-green-500/30 text-green-400">
+                  <Cloud />
+                </div>
+                <h3 className="text-xl font-bold mb-2">iCloud 同步</h3>
+                <p className="text-zinc-400 text-sm">
+                  基于 CloudKit，数据仅在你的设备间传输，极度安全。
                 </p>
+                <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-opacity transform group-hover:translate-x-0 translate-x-2">
+                  <ArrowUpRight className="text-zinc-500" />
+                </div>
               </div>
-              <div className="hidden md:block w-1/3 h-24 bg-gradient-to-l from-green-500/10 to-transparent rounded-r-2xl border-y border-r border-green-500/10" />
-            </SpotlightCard>
+            </BentoCard>
           </div>
         </div>
       </section>
 
-      {/* Workflow Section (Timeline) */}
-      <section className="py-32 px-6">
-        <div className="container mx-auto max-w-5xl">
-          <div className="text-center mb-24">
-            <h2 className="text-4xl font-bold mb-4">三步，搞定课堂笔记</h2>
+      {/* Testimonials / Social Proof (Marquee) */}
+      <section className="py-20 border-y border-white/5 bg-white/[0.02]">
+        <div className="text-center mb-10">
+          <p className="text-sm text-zinc-500 uppercase tracking-widest font-semibold">
+            Trusted by students from
+          </p>
+        </div>
+        <div className="overflow-hidden flex relative">
+          <div className="flex animate-marquee whitespace-nowrap gap-16 px-8">
+            {["Harvard", "Stanford", "MIT", "Berkeley", "Cambridge", "Oxford", "Tsinghua", "Peking U"].map(
+              (uni, i) => (
+                <span key={i} className="text-2xl font-bold text-zinc-700 select-none">
+                  {uni}
+                </span>
+              ),
+            )}
+            {["Harvard", "Stanford", "MIT", "Berkeley", "Cambridge", "Oxford", "Tsinghua", "Peking U"].map(
+              (uni, i) => (
+                <span key={`dup-${i}`} className="text-2xl font-bold text-zinc-700 select-none">
+                  {uni}
+                </span>
+              ),
+            )}
           </div>
+          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-[#030303] to-transparent" />
+          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-[#030303] to-transparent" />
+        </div>
+      </section>
 
-          <div className="relative">
-            {/* Line */}
-            <div className="absolute left-[50%] top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-zinc-700 to-transparent hidden md:block" />
+      {/* Workflow Timeline - Refined */}
+      <section id="how-it-works" className="py-32 px-6">
+        <div className="container mx-auto max-w-4xl">
+          <h2 className="text-3xl md:text-4xl font-bold mb-16 text-center">
+            简单三步，
+            <br />
+            搞定课堂笔记
+          </h2>
 
-            <div className="space-y-24">
-              <TimelineItem
-                step="01"
-                title="开启录音"
-                desc="进入课堂，一键开启。Classby 会在后台静默运行，耗电极低。"
-                icon={<Mic />}
-                align="left"
-              />
-              <TimelineItem
-                step="02"
-                title="实时转写"
-                desc="录音结束，AI 引擎立即介入，将音频转化为精确的逐字稿。"
-                icon={<Zap />}
-                align="right"
-              />
-              <TimelineItem
-                step="03"
-                title="生成笔记"
-                desc="喝杯咖啡的时间，一份结构化、重点突出的智能笔记已准备就绪。"
-                icon={<Sparkles />}
-                align="left"
-              />
+          <div className="relative pl-8 md:pl-0 border-l md:border-l-0 border-white/10 space-y-16">
+            <WorkflowItem
+              index="01"
+              title="开启录音"
+              desc="进入课堂，一键开启。Classby 会在后台静默运行。"
+              icon={<Mic />}
+            />
+            <WorkflowItem
+              index="02"
+              title="实时转写"
+              desc="录音结束，AI 引擎立即介入，将音频转化为精确的逐字稿。"
+              icon={<Zap />}
+            />
+            <WorkflowItem
+              index="03"
+              title="生成笔记"
+              desc="喝杯咖啡的时间，一份结构化、重点突出的智能笔记已准备就绪。"
+              icon={<FileText />}
+            />
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-32 px-6 relative overflow-hidden">
+        <div className="absolute inset-0 bg-indigo-600/5" />
+        <div className="container mx-auto max-w-5xl relative z-10">
+          <div className="bg-gradient-to-b from-zinc-900 to-black border border-white/10 rounded-3xl p-12 md:p-20 text-center overflow-hidden relative">
+            {/* Glow */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full bg-indigo-500/10 blur-[100px] rounded-full pointer-events-none" />
+
+            <h2 className="text-4xl md:text-5xl font-bold mb-6 relative z-10">准备好提升学习效率了吗？</h2>
+            <p className="text-zinc-400 text-lg mb-10 max-w-2xl mx-auto relative z-10">
+              加入成千上万的学生，使用 Classby 改变你的学习方式。现在下载，即刻体验。
+            </p>
+
+            <div className="flex justify-center gap-4 relative z-10">
+              <button className="h-14 px-8 rounded-full bg-white text-black font-bold text-lg hover:bg-zinc-200 transition-colors">
+                免费下载
+              </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Privacy & Support Grid */}
-      <section className="py-32 px-6 bg-zinc-900/30 border-y border-white/5">
-        <div className="container mx-auto max-w-6xl">
-          <div className="grid md:grid-cols-2 gap-16">
-            {/* Privacy */}
-            <div id="privacy">
-              <div className="flex items-center gap-4 mb-8">
-                <Shield className="w-10 h-10 text-green-400" />
-                <h2 className="text-3xl font-bold">隐私至上</h2>
-              </div>
-              <div className="space-y-6 border-l border-zinc-800 pl-6">
-                <div className="relative">
-                  <h3 className="text-xl font-semibold text-white mb-2">不做任何追踪</h3>
-                  <p className="text-zinc-400">我们不含广告 SDK，不收集用户画像。</p>
-                </div>
-                <div className="relative">
-                  <h3 className="text-xl font-semibold text-white mb-2">数据归您所有</h3>
-                  <p className="text-zinc-400">录音文件与笔记仅保存在您的本地设备和个人 iCloud 中。</p>
-                </div>
-                <div className="pt-4">
-                  <Link
-                    href="/privacy"
-                    className="text-green-400 hover:text-green-300 font-medium inline-flex items-center"
-                  >
-                    阅读完整隐私政策 <ArrowUpRight className="ml-1 w-4 h-4" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            {/* Support */}
-            <div id="support">
-              <div className="flex items-center gap-4 mb-8">
-                <Mail className="w-10 h-10 text-blue-400" />
-                <h2 className="text-3xl font-bold">获取支持</h2>
-              </div>
-              <div className="glass-card p-8 rounded-2xl">
-                <p className="text-zinc-300 mb-6">
-                  遇到问题或有功能建议？我们的开发团队（其实就我一个）很乐意听到您的声音。
-                </p>
-                <div className="flex flex-col gap-4">
-                  <a
-                    href="mailto:review@classby.app"
-                    className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5"
-                  >
-                    <span className="flex items-center gap-3">
-                      <Mail className="w-5 h-5 text-zinc-400" />
-                      review@classby.app
-                    </span>
-                    <ArrowUpRight className="w-4 h-4 text-zinc-500" />
-                  </a>
-                  <Link
-                    href="/support"
-                    className="flex items-center justify-between p-4 rounded-xl bg-white/5 hover:bg-white/10 transition-colors border border-white/5"
-                  >
-                    <span className="flex items-center gap-3">
-                      <FileText className="w-5 h-5 text-zinc-400" />
-                      查看常见问题 (FAQ)
-                    </span>
-                    <ArrowUpRight className="w-4 h-4 text-zinc-500" />
-                  </Link>
-                </div>
-              </div>
-            </div>
+      {/* Footer - Minimalist */}
+      <footer className="py-12 px-6 border-t border-white/5 bg-[#050505] text-sm">
+        <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2 text-zinc-400">
+            <div className="w-5 h-5 bg-zinc-800 rounded-sm" />
+            © 2025 Classby
           </div>
-        </div>
-      </section>
-
-      {/* Footer */}
-      <footer className="py-12 px-6 text-center border-t border-white/5 bg-black">
-        <div className="container mx-auto flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-zinc-500">
-          <div className="flex items-center gap-2">
-            <Image src="/logo.png" alt="Classby logo" width={24} height={24} className="rounded" />
-            <span>© 2025 Classby. All rights reserved.</span>
-          </div>
-          <div className="flex gap-8">
-            <a
-              href="https://github.com"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-white transition-colors"
-            >
-              <Github className="w-5 h-5" />
+          <div className="flex gap-8 text-zinc-500">
+            <Link href="/privacy" className="hover:text-white transition-colors">
+              隐私政策
+            </Link>
+            <Link href="/support" className="hover:text-white transition-colors">
+              支持
+            </Link>
+            <a href="#" className="hover:text-white transition-colors">
+              <Github className="w-4 h-4" />
             </a>
           </div>
         </div>
@@ -396,31 +402,9 @@ export default function Home() {
   );
 }
 
-/* --- COMPONENTS --- */
+// --- Sub Components ---
 
-function NavLink({ href, children }: { href: string; children: ReactNode }) {
-  return (
-    <a
-      href={href}
-      className="px-4 py-2 text-sm font-medium text-zinc-400 hover:text-white transition-colors rounded-full hover:bg-white/5"
-    >
-      {children}
-    </a>
-  );
-}
-
-// 高级 Spotlight 卡片组件
-function SpotlightCard({
-  children,
-  className = "",
-  from = "from-white/20",
-  to = "to-white/0",
-}: {
-  children: ReactNode;
-  className?: string;
-  from?: string;
-  to?: string;
-}) {
+function BentoCard({ children, className = "" }: { children: ReactNode; className?: string }) {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
@@ -432,63 +416,46 @@ function SpotlightCard({
 
   return (
     <div
-      className={`group relative border border-zinc-800 bg-zinc-900/50 overflow-hidden rounded-3xl ${className}`}
+      className={`group relative rounded-3xl border border-white/10 overflow-hidden hover:border-white/20 transition-colors duration-500 ${className}`}
       onMouseMove={handleMouseMove}
     >
+      <div className="absolute inset-0 bg-zinc-900/50" />
+      {/* Spotlight Effect */}
       <motion.div
-        className={`pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100 bg-gradient-to-br ${from} ${to}`}
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 group-hover:opacity-100"
         style={{
           background: useMotionTemplate`
             radial-gradient(
-              650px circle at ${mouseX}px ${mouseY}px,
-              rgba(255,255,255,0.1),
-              transparent 80%
+              600px circle at ${mouseX}px ${mouseY}px,
+              rgba(255,255,255,0.06),
+              transparent 40%
             )
           `,
         }}
       />
-      <div className="relative h-full p-8">{children}</div>
+      <div className="relative h-full">{children}</div>
     </div>
   );
 }
 
-// Timeline Item 组件
-function TimelineItem({
-  step,
-  title,
-  desc,
-  icon,
-  align,
-}: {
-  step: string;
-  title: string;
-  desc: string;
-  icon: ReactNode;
-  align: "left" | "right";
-}) {
+function WorkflowItem({ index, title, desc, icon }: { index: string; title: string; desc: string; icon: ReactNode }) {
   return (
-    <div
-      className={`flex flex-col md:flex-row items-center ${
-        align === "right" ? "md:flex-row-reverse" : ""
-      } gap-8 relative`}
-    >
-      <div className="hidden md:block absolute left-[50%] top-0 w-4 h-4 rounded-full bg-black border-4 border-zinc-700 -translate-x-1/2 z-10" />
+    <div className="flex md:items-center gap-8 md:gap-16 group">
+      <span className="hidden md:block text-5xl font-bold text-zinc-800 group-hover:text-indigo-500/20 transition-colors">
+        {index}
+      </span>
 
-      <div className={`flex-1 text-center ${align === "left" ? "md:text-right" : "md:text-left"}`}>
-        <h3 className="text-6xl font-bold text-zinc-800 mb-4 select-none">{step}</h3>
-      </div>
+      {/* Mobile Line Dot */}
+      <div className="absolute -left-[5px] md:hidden w-2.5 h-2.5 rounded-full bg-zinc-800 border border-black mt-1.5" />
 
-      <div className="flex-1">
-        <div className="glass-card p-8 rounded-2xl relative overflow-hidden group hover:border-zinc-500/50 transition-colors">
-          <div className="absolute top-0 right-0 p-6 opacity-10 group-hover:opacity-20 transition-opacity scale-150">
+      <div className="flex-1 bg-zinc-900/30 border border-white/5 p-6 rounded-2xl hover:bg-zinc-900/50 transition-colors">
+        <div className="flex items-center gap-4 mb-3">
+          <div className="w-10 h-10 rounded-lg bg-zinc-800/50 flex items-center justify-center text-white">
             {icon}
           </div>
-          <h4 className="text-2xl font-bold mb-3 text-white flex items-center gap-3">
-            {icon}
-            {title}
-          </h4>
-          <p className="text-zinc-400 leading-relaxed">{desc}</p>
+          <h3 className="text-xl font-bold">{title}</h3>
         </div>
+        <p className="text-zinc-400">{desc}</p>
       </div>
     </div>
   );

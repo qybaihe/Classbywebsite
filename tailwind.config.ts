@@ -50,7 +50,7 @@ const config: Config = {
         "fade-up": "fade-up 0.8s ease-out forwards",
         "fade-in": "fade-in 0.6s ease-out",
         "slide-up": "slide-up 0.6s ease-out",
-        "marquee": "marquee 3s linear infinite",
+        "marquee": "marquee 25s linear infinite",
         spotlight: "spotlight 2s ease .75s 1 forwards",
         shimmer: "shimmer 2s linear infinite",
         blob: "blob 7s infinite",
@@ -69,8 +69,8 @@ const config: Config = {
           "100%": { transform: "translateY(0)" },
         },
         marquee: {
-          "0%": { transform: "rotate(0deg)" },
-          "100%": { transform: "rotate(360deg)" },
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(-100%)" },
         },
         spotlight: {
           "0%": {
@@ -96,6 +96,14 @@ const config: Config = {
           "0%": { opacity: "0.1" },
           "50%": { opacity: "0.3" },
           "100%": { opacity: "0.1" },
+        },
+        "border-beam": {
+          "0%": {
+            "offset-distance": "0%",
+          },
+          "100%": {
+            "offset-distance": "100%",
+          },
         },
       },
     },
