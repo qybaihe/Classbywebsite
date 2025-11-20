@@ -54,6 +54,10 @@ const config: Config = {
         spotlight: "spotlight 2s ease .75s 1 forwards",
         shimmer: "shimmer 2s linear infinite",
         blob: "blob 7s infinite",
+        "spin-slow": "spin 12s linear infinite",
+        "pulse-slow": "pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite",
+        float: "float 6s ease-in-out infinite",
+        "gradient-xy": "gradient-xy 15s ease infinite",
       },
       keyframes: {
         "fade-up": {
@@ -86,6 +90,10 @@ const config: Config = {
           from: { backgroundPosition: "0 0" },
           to: { backgroundPosition: "-200% 0" },
         },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-10px)" },
+        },
         blob: {
           "0%": { transform: "translate(0px, 0px) scale(1)" },
           "33%": { transform: "translate(30px, -50px) scale(1.1)" },
@@ -96,6 +104,10 @@ const config: Config = {
           "0%": { opacity: "0.1" },
           "50%": { opacity: "0.3" },
           "100%": { opacity: "0.1" },
+        },
+        "gradient-xy": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
         },
         "border-beam": {
           "0%": {
