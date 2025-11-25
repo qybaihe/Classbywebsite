@@ -361,7 +361,7 @@ export default function Home() {
               隐私
             </Link>
             <a
-              href="https://apps.apple.com"
+              href="https://apps.apple.com/cn/app/classby/id6754916620"
               target="_blank"
               rel="noreferrer"
               className="text-xs font-semibold bg-white text-black px-4 py-1.5 rounded-full hover:bg-zinc-200 transition-colors flex items-center gap-1"
@@ -401,9 +401,14 @@ export default function Home() {
               </p>
 
               <div className="flex gap-4 justify-center lg:justify-start">
-                <button className="h-12 px-8 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform">
+                <a
+                  href="https://apps.apple.com/cn/app/classby/id6754916620"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="h-12 px-8 rounded-full bg-white text-black font-bold hover:scale-105 transition-transform inline-flex items-center justify-center"
+                >
                   免费下载
-                </button>
+                </a>
               </div>
             </div>
 
@@ -538,25 +543,40 @@ export default function Home() {
             Trusted by students from
           </p>
         </div>
-        <div className="overflow-hidden flex relative">
-          <div className="flex animate-marquee whitespace-nowrap gap-16 px-8">
-            {["Harvard", "Stanford", "MIT", "Berkeley", "Cambridge", "Oxford", "Tsinghua", "Peking U"].map(
-              (uni, i) => (
-                <span key={i} className="text-2xl font-bold text-zinc-700 select-none">
-                  {uni}
-                </span>
-              ),
-            )}
-            {["Harvard", "Stanford", "MIT", "Berkeley", "Cambridge", "Oxford", "Tsinghua", "Peking U"].map(
-              (uni, i) => (
-                <span key={`dup-${i}`} className="text-2xl font-bold text-zinc-700 select-none">
-                  {uni}
-                </span>
-              ),
-            )}
+        <div className="overflow-hidden relative">
+          <div className="flex gap-16 px-8">
+            {/* Track A: 从左往左滚动 0% -> -100% */}
+            <motion.div
+              className="flex gap-16 whitespace-nowrap shrink-0"
+              animate={{ x: ["0%", "-100%"] }}
+              transition={{ duration: 30, ease: "linear", repeat: Infinity }}
+            >
+              {["Harvard", "Stanford", "MIT", "Berkeley", "Cambridge", "Oxford", "Tsinghua", "Peking U"].map(
+                (uni, i) => (
+                  <span key={i} className="text-2xl font-bold text-zinc-700 select-none">
+                    {uni}
+                  </span>
+                ),
+              )}
+            </motion.div>
+
+            {/* Track B: 从右往左滚动 100% -> 0%，与 A 锁步 */}
+            <motion.div
+              className="flex gap-16 whitespace-nowrap shrink-0"
+              animate={{ x: ["100%", "0%"] }}
+              transition={{ duration: 30, ease: "linear", repeat: Infinity }}
+            >
+              {["Harvard", "Stanford", "MIT", "Berkeley", "Cambridge", "Oxford", "Tsinghua", "Peking U"].map(
+                (uni, i) => (
+                  <span key={`dup-${i}`} className="text-2xl font-bold text-zinc-700 select-none">
+                    {uni}
+                  </span>
+                ),
+              )}
+            </motion.div>
           </div>
-          <div className="absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-[#030303] to-transparent" />
-          <div className="absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-[#030303] to-transparent" />
+          <div className="pointer-events-none absolute top-0 left-0 w-32 h-full bg-gradient-to-r from-[#030303] to-transparent" />
+          <div className="pointer-events-none absolute top-0 right-0 w-32 h-full bg-gradient-to-l from-[#030303] to-transparent" />
         </div>
       </section>
 
@@ -606,9 +626,14 @@ export default function Home() {
             </p>
 
             <div className="flex justify-center gap-4 relative z-10">
-              <button className="h-14 px-8 rounded-full bg-white text-black font-bold text-lg hover:bg-zinc-200 transition-colors">
+              <a
+                href="https://apps.apple.com/cn/app/classby/id6754916620"
+                target="_blank"
+                rel="noreferrer"
+                className="h-14 px-8 rounded-full bg-white text-black font-bold text-lg hover:bg-zinc-200 transition-colors inline-flex items-center justify-center"
+              >
                 免费下载
-              </button>
+              </a>
             </div>
           </div>
         </div>
